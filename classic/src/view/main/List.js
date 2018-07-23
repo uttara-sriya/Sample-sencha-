@@ -1,0 +1,76 @@
+/**
+ * This view is an example list of people.
+ */
+Ext.define('sampleForm.view.main.List', {
+    extend: 'Ext.grid.Panel',
+    xtype: 'mainlist',
+    requires: [
+        'sampleForm.store.Personnel'
+    ],
+    plugins: 'cellediting',
+
+    title: 'Personnel',
+
+    store: {
+        type: 'personnel'
+    },
+
+    columns: [
+        { text: 'Id', dataIndex: 'id', editor: { xtype: 'textfield' }, dataIndex: 'id' },
+        { text: 'Name', dataIndex: 'name', editor: { xtype: 'textfield' }, dataIndex: 'name' },
+        { text: 'Email', dataIndex: 'email', flex: 1, editor: { xtype: 'textfield' }, dataIndex: 'email' },
+        { text: 'Phone', dataIndex: 'phone', flex: 1, editor: { xtype: 'textfield' }, dataIndex: 'phone' },
+        {
+            text: 'View',
+            xtype: 'widgetcolumn',
+            dataIndex: 'widget',
+            widget: {
+                xtype: 'button',
+                text: 'Action',
+                handler: function(btn) {
+                    var record = btn.getWidgetRecord();
+                    console.log(record.get('name'));
+                    console.log(record.get('email'));
+                    console.log(record.get('phone'));
+                }
+            }
+        }
+    ],
+
+    listeners: {
+        select: 'onItemSelected'
+    },
+
+    bbar: {
+        xtype: 'pagingtoolbar',
+        // plugins: 'ux-slidingpager',//needs to add ux under requires in app.jsonh
+        plugins: 'ux-progressbarpager',
+        displayInfo: true
+    },
+    // store: {
+    //     fields: ['id', 'name', 'email', 'phone'],
+    //     autoLoad: true,
+    //     pageSize: 2,
+    // type: 'personnel',//use when data to be fetched from temp store
+    // proxy: { // For REST calls
+    //     type: 'rest',
+    //     url: 'app.php/users',
+    //     reader: {
+    //         type: 'json',
+    //         rootProperty: 'data'
+    //     },
+    //     writer: {
+    //         type: 'json'
+    //     }
+    // },
+    // proxy: { 
+    //     type: 'ajax', //For AJAX Calls
+    //     url: 'http://localhost:8080/proxytest',
+    //     reader: {
+    //         type: 'json',
+    //         rootProperty: 'data',
+    //         totalProperty: 'total' // json containing total 
+    //     }
+    // }
+    // }
+});
