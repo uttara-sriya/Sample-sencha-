@@ -116,9 +116,36 @@ Ext.define('sampleForm.view.main.ProfileList', {
                 store: {
                     type: 'states'
                 },
+                tpl: new Ext.XTemplate('<tpl for=".">', '<div class="x-boundlist-item">', '<input type="checkbox" />', '{state}', '</div>', '</tpl>'),
                 minChars: 0,
                 queryMode: 'local',
-                typeAhead: true
+                typeAhead: true,
+                listeners: {
+                    select: function(combo, records) {
+                        var node;
+                        Ext.each(records, function(rec) {
+                            node = combo.getPicker().getNode(rec);
+                            Ext.get(node).down('input').dom.checked = true;
+                        });
+                        if (combo.getValue() == 'Alaska') {
+                            var form = this.up('form').getForm();
+                            form.getFields().each(function(item) {
+                                item.allowBlank = true;
+                                item.validateValue(item.getValue());
+                            });
+
+                            // var contactfield = this.up('form').getForm().findField("contact");
+                            // contactfield.allowBlank = true;
+                            // contactfield.validateValue(contactfield.getValue());
+                        }
+                    },
+                    beforedeselect: function(combo, rec) {
+                        var node = combo.getPicker().getNode(rec);
+                        if (node != null && node != undefined) {
+                            Ext.get(node).down('input').dom.checked = false;
+                        }
+                    }
+                }
             }, {
                 xtype: 'fieldcontainer',
                 fieldLabel: 'Department',
@@ -167,19 +194,20 @@ Ext.define('sampleForm.view.main.ProfileList', {
         itemId: 'btnCreate',
         disabled: true,
         formBind: true,
-
-        listeners: {
-            'whencreated': function(one, two, three) {
-                console.log(one);
-                console.log(two);
-                console.log(three);
-            }
-        }
+        handler: 'onCreate',
+        // listeners: {
+        //     'whencreated': function(one, two, three) {
+        //         console.log(one);
+        //         console.log(two);
+        //         console.log(three);
+        //     }
+        // }
     }, {
         text: 'Reset',
         formBind: true,
         handler: function() {
             this.up('form').getForm().reset();
+            // this.up('form').down('').allowBlank = true;
         }
     }],
 
